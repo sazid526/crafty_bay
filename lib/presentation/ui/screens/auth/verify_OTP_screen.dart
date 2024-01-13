@@ -1,6 +1,8 @@
+import 'package:crafty_bay/presentation/ui/screens/auth/complete_profile_screen.dart';
 import 'package:crafty_bay/presentation/ui/utility/app_color.dart';
 import 'package:crafty_bay/presentation/ui/widgets/app_logo.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class VerifyOTPScreen extends StatefulWidget {
@@ -52,9 +54,30 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(onPressed: (){
+                  Get.offAll(CompleteProfileScreen());
+                }, child: Text("Next")),
+              ),
+              SizedBox(height: 16,),
+              RichText(text: TextSpan(
+                style: TextStyle(
+                  color: Colors.grey
+                ),
+                children: [
+                  TextSpan(
+                    text: "This code will expire"
+                  ),
+                  TextSpan(
+                    text: "120s",
+                    style: TextStyle(
+                      color: AppColors.primaryColor,
+                      fontWeight: FontWeight.w600
+                    )
+                  )
+                ]
+              )),
+              TextButton(onPressed: (){
 
-                }, child: Text("Done")),
-              )
+              }, child: Text("Resend Code",style: TextStyle(color: Colors.grey),))
             ],
           ),
         ),
