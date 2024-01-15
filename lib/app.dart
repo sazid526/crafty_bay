@@ -1,3 +1,5 @@
+import 'package:crafty_bay/controller_binder.dart';
+import 'package:crafty_bay/presentation/state_holders/main_bottom_nav_controller.dart';
 import 'package:crafty_bay/presentation/ui/screens/auth/complete_profile_screen.dart';
 import 'package:crafty_bay/presentation/ui/screens/auth/splash_screen.dart';
 import 'package:crafty_bay/presentation/ui/screens/main_bottom_nav_screen.dart';
@@ -74,7 +76,10 @@ class CraftyBay extends StatelessWidget {
           )
         )
       ),
-      home: MainBottomNavScreen(),
+      home: SplashScreen(),
+      initialBinding: ControllerBinder(),
     );
   }
 }
+
+
