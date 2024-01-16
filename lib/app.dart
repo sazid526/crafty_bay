@@ -74,6 +74,12 @@ class CraftyBay extends StatelessWidget {
           style: TextButton.styleFrom(
             foregroundColor: AppColors.primaryColor
           )
+        ),
+        appBarTheme: const AppBarTheme(
+          titleTextStyle: TextStyle(fontSize: 18,color: Colors.black),
+          foregroundColor: Colors.black,
+          backgroundColor: Colors.white,
+          elevation: 5
         )
       ),
       home: SplashScreen(),
