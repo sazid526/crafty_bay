@@ -1,12 +1,10 @@
 import 'package:crafty_bay/controller_binder.dart';
-import 'package:crafty_bay/presentation/state_holders/main_bottom_nav_controller.dart';
-import 'package:crafty_bay/presentation/ui/screens/auth/complete_profile_screen.dart';
 import 'package:crafty_bay/presentation/ui/screens/auth/splash_screen.dart';
-import 'package:crafty_bay/presentation/ui/screens/main_bottom_nav_screen.dart';
-import 'package:crafty_bay/presentation/ui/screens/product_details_screen.dart';
 import 'package:crafty_bay/presentation/ui/utility/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+
 
 class CraftyBay extends StatelessWidget {
   const CraftyBay({super.key});
@@ -83,7 +81,7 @@ class CraftyBay extends StatelessWidget {
           elevation: 5
         )
       ),
-      home: ProductDetailsScreen(),
+      home: SplashScreen(),
       initialBinding: ControllerBinder(),
     );
   }
