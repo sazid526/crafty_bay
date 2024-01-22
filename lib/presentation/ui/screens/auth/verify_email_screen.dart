@@ -24,52 +24,62 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
             key: _formKey,
             child: Column(
               children: [
-                SizedBox(height: 160,),
-                AppLogo(height: 80,),
-                const SizedBox(height:24),
-                Text("Welcome back",style: Theme.of(context).textTheme.titleLarge,),
-                const SizedBox(height:4),
-                Text("Please enter email address",style: Theme.of(context).textTheme.bodySmall,),
-                const SizedBox(height:16),
+                SizedBox(
+                  height: 160,
+                ),
+                AppLogo(
+                  height: 80,
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  "Welcome back",
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  "Please enter email address",
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                const SizedBox(height: 16),
                 TextFormField(
                   controller: _emailTEcontroller,
-                  validator: (value){
-                    if(value?.trim().isEmpty ?? true){
+                  validator: (value) {
+                    if (value?.trim().isEmpty ?? true) {
                       return "Enter your email";
                     }
                     return null;
                   },
-                  decoration: const InputDecoration(
-                    hintText: "Email"
-                  ),
+                  decoration: const InputDecoration(hintText: "Email"),
                 ),
-                const SizedBox(height:24),
-                GetBuilder<SendEmailOtpController>(
-                  builder: (controller) {
-                    return SizedBox(
-                      width: double.infinity,
-                      child: Visibility(
-                        visible: controller.inProgress == false,
-                        replacement: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                        child: ElevatedButton(onPressed: () async{
-                          if(_formKey.currentState!.validate()){
-                            final bool result = await controller.sendOtpToEmail(_emailTEcontroller.text.trim());
-                            if(result){
-                              Get.to(const VerifyOTPScreen());
-                            }else{
-                              Get.showSnackbar(GetSnackBar(
-                                title: "Send OTP failed",
-                                message: controller.errorMassage,
-                              ));
+                const SizedBox(height: 24),
+                GetBuilder<SendEmailOtpController>(builder: (controller) {
+                  return SizedBox(
+                    width: double.infinity,
+                    child: Visibility(
+                      visible: controller.inProgress == false,
+                      replacement: CircularProgressIndicator(),
+                      child: ElevatedButton(
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              final bool result =
+                                  await controller.sendOtpToEmail(
+                                      _emailTEcontroller.text.trim());
+                              if (result) {
+                                Get.to(VerifyOTPScreen(
+                                  email: _emailTEcontroller.text.trim(),
+                                ));
+                              } else {
+                                Get.showSnackbar(GetSnackBar(
+                                  title: "Send OTP failed",
+                                  message: controller.errorMassage,
+                                ));
+                              }
                             }
-                          }
-                        }, child: const Text("Next")),
-                      ),
-                    );
-                  }
-                )
+                          },
+                          child: const Text("Next")),
+                    ),
+                  );
+                })
               ],
             ),
           ),
