@@ -1,30 +1,51 @@
 import 'package:crafty_bay/data/services/network_caller.dart';
+import 'package:crafty_bay/presentation/state_holders/read_profile_data_controller.dart';
 import 'package:get/get.dart';
 import 'package:crafty_bay/data/utility/urls.dart';
 
-
 class VerifyOTPcontroller extends GetxController {
   bool _inProgress = false;
+
   bool get inProgress => _inProgress;
-  String _errorMassage =  "";
 
-  String get errorMassage => _errorMassage;
+  String _errorMessage = '';
 
-  Future<bool> verifyOTP(String email , String otp)async{
+  String get errorMessage => _errorMessage;
+
+  bool _shouldNavigateCompleteProfile = true;
+
+  bool get shouldNavigateCompleteProfile => _shouldNavigateCompleteProfile;
+
+  String _token = '';
+
+  String get token => _token;
+
+  Future<bool> verifyOTP(String email, String otp) async {
     _inProgress = true;
     update();
-    final response = await NetworkCaller().getRequest(Urls.verifyOtp(email, otp));
+    final response =
+        await NetworkCaller().getRequest(Urls.verifyOtp(email, otp));
     _inProgress = false;
-    update();
-    if(response.isSuccess){
-      final token = response.responseData["data"];
+    if (response.isSuccess) {
+      _token = response.responseData['data'];
+      await Future.delayed(const Duration(seconds: 3));
+      final result =
+          await Get.find<ReadProfileDataController>().readProfileData(token);
+      if (result) {
+        _shouldNavigateCompleteProfile =
+            Get.find<ReadProfileDataController>().isProfileCompleted == false;
+        if (_shouldNavigateCompleteProfile == false) {}
+      } else {
+        _errorMessage = Get.find<ReadProfileDataController>().errorMessage;
+        update();
+        return false;
+      }
       update();
       return true;
-    }else{
-      _errorMassage = response.errorMassage;
+    } else {
+      _errorMessage = response.errorMassage;
       update();
       return false;
     }
   }
-
 }

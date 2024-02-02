@@ -78,7 +78,7 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
                             }else{
                               Get.showSnackbar(GetSnackBar(
                                 title: "Otp verification failed",
-                                message: verifyOptController.errorMassage,
+                                message: verifyOptController.errorMessage,
                               ));
                             }
                           }
