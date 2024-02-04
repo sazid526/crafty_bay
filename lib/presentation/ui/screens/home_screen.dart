@@ -1,4 +1,6 @@
+import 'package:crafty_bay/presentation/state_holders/auth_controller.dart';
 import 'package:crafty_bay/presentation/state_holders/main_bottom_nav_controller.dart';
+import 'package:crafty_bay/presentation/ui/screens/auth/verify_email_screen.dart';
 import 'package:crafty_bay/presentation/ui/screens/category_screen.dart';
 import 'package:crafty_bay/presentation/ui/screens/product_list_screen.dart';
 import 'package:crafty_bay/presentation/ui/utility/app_color.dart';
@@ -139,7 +141,10 @@ class _HomeScreenState extends State<HomeScreen> {
       title: Image.asset(AssetsPath.logo_nav),
       actions: [
         CircleIconButton(
-          onTap: () {},
+          onTap: () async{
+            Get.find<AuthController>().clearAuthData();
+            Get.offAll(const VerifyEmailScreen());
+          },
           iconData: Icons.person_outline,
         ),
         SizedBox(

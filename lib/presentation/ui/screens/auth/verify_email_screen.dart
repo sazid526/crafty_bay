@@ -1,6 +1,7 @@
 import 'package:crafty_bay/presentation/state_holders/send_email_otp_controller.dart';
 import 'package:crafty_bay/presentation/ui/screens/auth/verify_OTP_screen.dart';
 import 'package:crafty_bay/presentation/ui/widgets/app_logo.dart';
+import 'package:crafty_bay/presentation/ui/widgets/center_circuler_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -57,7 +58,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                     width: double.infinity,
                     child: Visibility(
                       visible: controller.inProgress == false,
-                      replacement: CircularProgressIndicator(),
+                      replacement: CenterCirculerProgressIndicator(),
                       child: ElevatedButton(
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
@@ -72,6 +73,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                                 Get.showSnackbar(GetSnackBar(
                                   title: "Send OTP failed",
                                   message: controller.errorMassage,
+                                  duration: Duration(seconds: 3),
                                 ));
                               }
                             }

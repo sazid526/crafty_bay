@@ -1,5 +1,4 @@
 import 'package:crafty_bay/data/models/profile.dart';
-import 'package:crafty_bay/data/models/response_data.dart';
 import 'package:crafty_bay/data/services/network_caller.dart';
 import 'package:crafty_bay/data/utility/urls.dart';
 import 'package:get/get.dart';

@@ -1,7 +1,9 @@
 import 'package:crafty_bay/presentation/state_holders/verify_otp_controller.dart';
 import 'package:crafty_bay/presentation/ui/screens/auth/complete_profile_screen.dart';
+import 'package:crafty_bay/presentation/ui/screens/main_bottom_nav_screen.dart';
 import 'package:crafty_bay/presentation/ui/utility/app_color.dart';
 import 'package:crafty_bay/presentation/ui/widgets/app_logo.dart';
+import 'package:crafty_bay/presentation/ui/widgets/center_circuler_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -67,23 +69,28 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
                     builder: (verifyOptController) {
                       return Visibility(
                         visible: verifyOptController.inProgress == false,
-                        replacement: CircularProgressIndicator(),
+                        replacement: const CenterCirculerProgressIndicator(),
                         child: ElevatedButton(onPressed: () async{
                           if(_formKey.currentState!.validate()){
                             final bool response = await verifyOptController.verifyOTP(
                               widget.email,_otpTEcontroller.text
                             );
                             if(response){
-                              Get.to(const CompleteProfileScreen());
+                              if (verifyOptController.shouldNavigateCompleteProfile) {
+                                Get.to(() => const CompleteProfileScreen());
+                              } else {
+                                Get.offAll(() => const MainBottomNavScreen());
+                              }
                             }else{
                               Get.showSnackbar(GetSnackBar(
                                 title: "Otp verification failed",
                                 message: verifyOptController.errorMessage,
+                                duration: const Duration(seconds: 3),
+                                isDismissible: true,
                               ));
                             }
                           }
-                          Get.offAll(CompleteProfileScreen());
-                        }, child: Text("Next")),
+                        }, child: const Text("Next")),
                       );
                     }
                   ),
