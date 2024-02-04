@@ -1,3 +1,4 @@
+import 'package:crafty_bay/data/models/category_list_item.dart';
 import 'package:crafty_bay/presentation/ui/screens/product_list_screen.dart';
 import 'package:crafty_bay/presentation/ui/utility/app_color.dart';
 import 'package:flutter/material.dart';
@@ -5,8 +6,10 @@ import 'package:get/get.dart';
 
 class CategoryItem extends StatelessWidget {
   const CategoryItem({
-    super.key,
+    super.key, required this.category,
   });
+
+  final CategoryListItem category;
 
 
 
@@ -25,16 +28,13 @@ class CategoryItem extends StatelessWidget {
           Card(
             elevation: 0,
             color: AppColors.primaryColor.withOpacity(0.1),
-            child: const Padding(
+            child:  Padding(
               padding: EdgeInsets.all(20),
-              child: Icon(
-                Icons.computer,
-                size: 32,
-                color: AppColors.primaryColor,
-              ),
+              child: Image.network(category.categoryImg ?? "", width: 40, height: 40,),
             ),
           ),
-          const Text("Electronics",style: TextStyle(
+           Text(category.categoryName ?? "",
+             style: const TextStyle(
               fontSize: 16,
               color: AppColors.primaryColor,
               fontWeight: FontWeight.w500

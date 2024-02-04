@@ -1,6 +1,8 @@
+import 'package:crafty_bay/presentation/state_holders/category_controller.dart';
 import 'package:crafty_bay/presentation/state_holders/main_bottom_nav_controller.dart';
 import 'package:crafty_bay/presentation/ui/screens/home_screen.dart';
 import 'package:crafty_bay/presentation/ui/widgets/category_item.dart';
+import 'package:crafty_bay/presentation/ui/widgets/center_circuler_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -30,22 +32,37 @@ class _CategoryScreenState extends State<CategoryScreen> {
             fontSize: 18
           ),),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: GridView.builder(
-            itemCount: 200,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                childAspectRatio: 0.95,
-                mainAxisSpacing: 12,
-                crossAxisSpacing: 8
+        body: RefreshIndicator(
+          onRefresh: () async{
+            Get.find<CategoryController>().getCategoryList();
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: GetBuilder<CategoryController>(
+              builder: (categoryController) {
+                return Visibility(
+                  visible: categoryController.inProgress == false,
+                  replacement: const CenterCirculerProgressIndicator(),
+                  child: GridView.builder(
+                    itemCount: categoryController.categoryListModel.categoryList?.length ?? 0,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 4,
+                        childAspectRatio: 0.95,
+                        mainAxisSpacing: 12,
+                        crossAxisSpacing: 8
 
-              ),
-              itemBuilder: (context,index){
-                return FittedBox(
-                  child: CategoryItem(),
+                      ),
+                      itemBuilder: (context,index){
+                        return FittedBox(
+                          child: CategoryItem(
+                            category: categoryController.categoryListModel.categoryList![index],
+                          ),
+                       );
+                      }
+                  ),
                 );
               }
+            ),
           ),
         ),
       ),

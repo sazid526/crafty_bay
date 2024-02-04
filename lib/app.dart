@@ -1,5 +1,6 @@
 import 'package:crafty_bay/controller_binder.dart';
 import 'package:crafty_bay/presentation/ui/screens/auth/splash_screen.dart';
+import 'package:crafty_bay/presentation/ui/screens/main_bottom_nav_screen.dart';
 import 'package:crafty_bay/presentation/ui/utility/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -81,7 +82,7 @@ class CraftyBay extends StatelessWidget {
           elevation: 5
         )
       ),
-      home: SplashScreen(),
+      home: MainBottomNavScreen(),
       initialBinding: ControllerBinder(),
     );
   }
