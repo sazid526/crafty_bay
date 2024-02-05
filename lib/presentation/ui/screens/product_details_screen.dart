@@ -1,12 +1,22 @@
+import 'package:crafty_bay/data/models/product_details_data.dart';
+import 'package:crafty_bay/presentation/state_holders/add_to_cart_controller.dart';
+import 'package:crafty_bay/presentation/state_holders/auth_controller.dart';
+import 'package:crafty_bay/presentation/state_holders/product_details_controller.dart';
+import 'package:crafty_bay/presentation/state_holders/verify_otp_controller.dart';
+import 'package:crafty_bay/presentation/ui/screens/auth/verify_email_screen.dart';
 import 'package:crafty_bay/presentation/ui/utility/app_color.dart';
 import 'package:crafty_bay/presentation/ui/widgets/Product_details/color_selector.dart';
 import 'package:crafty_bay/presentation/ui/widgets/Product_details/product_image_carousel.dart';
 import 'package:crafty_bay/presentation/ui/widgets/Product_details/size_selector.dart';
+import 'package:crafty_bay/presentation/ui/widgets/center_circuler_progress_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:item_count_number_button/item_count_number_button.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
-  const ProductDetailsScreen({super.key});
+  const ProductDetailsScreen({super.key, required this.productId});
+
+  final int productId;
 
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
@@ -31,7 +41,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     "XXXL",
   ];
 
-  late Color _selectedColor = Colors.pink;
+  String? _selectedColor;
+  String? _selectedSize;
+
+  @override
+  void initState() {
+    super.initState();
+    Get.find<ProductDetailsController>().getProductDetails(widget.productId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,159 +56,171 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       appBar: AppBar(
         title: Text("Product Details"),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                 const ProductImageCarousel(),
-                  productDetailsBody,
-                ],
+      body: GetBuilder<ProductDetailsController>(
+          builder: (productDetailsController) {
+        return Visibility(
+          visible: productDetailsController.inProgress == false,
+          replacement: const CenterCirculerProgressIndicator(),
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      ProductImageCarousel(
+                        urls: [
+                          productDetailsController.productDetails.img1 ?? '',
+                          productDetailsController.productDetails.img2 ?? '',
+                          productDetailsController.productDetails.img3 ?? '',
+                          productDetailsController.productDetails.img4 ?? '',
+                        ],
+                      ),
+                      productDetailsBody(
+                          productDetailsController.productDetails),
+                    ],
+                  ),
+                ),
               ),
-            ),
+              priceAndAddToCartSection
+            ],
           ),
-          priceAndAddToCartSection
+        );
+      }),
+    );
+  }
+
+  Padding productDetailsBody(ProductDetailsData productDetails) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                  child: Text(
+                productDetails.product?.title ?? '',
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              )),
+              ValueListenableBuilder(
+                  valueListenable: noOfItems,
+                  builder: (context, value, _) {
+                    return ItemCount(
+                      initialValue: 1,
+                      minValue: 0,
+                      maxValue: 20,
+                      decimalPlaces: 0,
+                      step: 1,
+                      color: AppColors.primaryColor,
+                      onChanged: (v) {
+                        // Handle counter value changes
+                        noOfItems.value = v.toInt();
+                      },
+                    );
+                  }),
+            ],
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          ReviewAndRatingRow(productDetails.product?.star ?? 0),
+          SizedBox(
+            height: 8,
+          ),
+          Text(
+            "Color",
+            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+          ),
+          ColorSelector(
+              colors: productDetails.color?.split(",").map((e) => getColorFromString(e)).toList() ?? [],
+              onChange: (selectedColor) {
+                _selectedColor = selectedColor.toString();
+              }),
+          SizedBox(
+            height: 16,
+          ),
+          Text(
+            "Size",
+            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          SizeSelector(
+              sizes: productDetails.size?.split(",") ?? [], onChange: (s) {
+                _selectedSize = s;
+          }),
+          SizedBox(
+            height: 16,
+          ),
+          Text(
+            "Description",
+            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Text(
+            productDetails.des ?? "",
+            style: TextStyle(
+                color: Colors.grey, fontWeight: FontWeight.w500, fontSize: 12),
+          ),
         ],
       ),
     );
   }
 
-  Padding get productDetailsBody {
-    return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                              child: Text(
-                            "Nike Sport Shoe 2023 Edition E02R - ",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w600),
-                          )),
-                          ValueListenableBuilder(
-                              valueListenable: noOfItems,
-                              builder: (context, value, _) {
-                                return ItemCount(
-                                  initialValue: 1,
-                                  minValue: 0,
-                                  maxValue: 20,
-                                  decimalPlaces: 0,
-                                  step: 1,
-                                  color: AppColors.primaryColor,
-                                  onChanged: (v) {
-                                    // Handle counter value changes
-                                    noOfItems.value = v.toInt();
-                                  },
-                                );
-                              }),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      ReviewAndRatingRow,
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Text(
-                        "Color",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 16),
-                      ),
-                      ColorSelector(
-                          colors: colors,
-                          onChange: (selectedColor) {
-                            _selectedColor = selectedColor;
-                          }),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      Text(
-                        "Size",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 16),
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      SizeSelector(sizes: sized, onChange: (s) {}),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      Text(
-                        "Description",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 16),
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Text(
-                        "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. ",
-                        style: TextStyle(
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12),
-                      ),
-                    ],
-                  ),
-                );
-  }
-
-  Row get ReviewAndRatingRow {
+  Row  ReviewAndRatingRow(double rating) {
     return Row(
-                      children: [
-                        Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.star,
-                              size: 18,
-                              color: Colors.amber,
-                            ),
-                            SizedBox(
-                              width: 2,
-                            ),
-                            Text(
-                              "4.4",
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black45),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Text(
-                          "Reviews",
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.primaryColor),
-                        ),
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4)),
-                          color: AppColors.primaryColor,
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Icon(
-                              Icons.favorite_border_rounded,
-                              size: 18,
-                              color: Colors.white,
-                            ),
-                          ),
-                        )
-                      ],
-                    );
+      children: [
+        Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            Icon(
+              Icons.star,
+              size: 18,
+              color: Colors.amber,
+            ),
+            SizedBox(
+              width: 2,
+            ),
+            Text(
+             rating.toStringAsPrecision(2),
+              style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black45),
+            )
+          ],
+        ),
+        SizedBox(
+          width: 8,
+        ),
+        Text(
+          "Reviews",
+          style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: AppColors.primaryColor),
+        ),
+        SizedBox(
+          width: 8,
+        ),
+        Card(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+          color: AppColors.primaryColor,
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Icon(
+              Icons.favorite_border_rounded,
+              size: 18,
+              color: Colors.white,
+            ),
+          ),
+        )
+      ],
+    );
   }
 
   Container get priceAndAddToCartSection {
@@ -228,13 +257,65 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
           SizedBox(
             width: 100,
-            child: ElevatedButton(
-              onPressed: () {},
-              child: const Text("Add To Cart"),
+            child: GetBuilder<AddToCartController>(
+              builder: (addToCartController) {
+                return Visibility(
+                  visible: addToCartController.inProgress == false,
+                  replacement: const CenterCirculerProgressIndicator(),
+                  child: ElevatedButton(
+                    onPressed: () async{
+                      if(_selectedSize!=null && _selectedColor != null ){
+                        if(Get.find<AuthController>().isTokenNotNull){
+                          _selectedColor = colorToHashColorCode(_selectedColor!);
+                          final response = await addToCartController.addToCart(
+                              widget.productId,
+                              _selectedColor!,
+                              _selectedSize!);
+                          if(response){
+                            Get.showSnackbar(const GetSnackBar(
+                              title: "Success",
+                              message: "This Product has been added to cart",
+                              duration: Duration(seconds: 2),
+                            ));
+                          }else{
+                            Get.showSnackbar(GetSnackBar(
+                              title: "Failed",
+                              message: addToCartController.errorMessage,
+                              duration: Duration(seconds: 2),
+                            ));
+                          }
+                        }else{
+                          Get.to( const VerifyEmailScreen());
+                        }
+                      }else{
+                        Get.showSnackbar(const GetSnackBar(
+                          title: "Add to cart failed",
+                          message: "Please select color and size",
+                          duration: Duration(seconds: 2),
+                        ));
+                      }
+                    },
+                    child: const Text("Add To Cart"),
+                  ),
+                );
+              }
             ),
           )
         ],
       ),
     );
+  }
+  
+  Color getColorFromString(String colorCode){
+    String code = colorCode.replaceAll("#", '');
+    String hexCode = 'FF$code';
+    return Color(int.parse('0x$hexCode'));
+  }
+  
+  String colorToHashColorCode(String colorCode){
+    return colorCode.toString()
+        .replaceAll("0xff", "#")
+        .replaceAll("Color(", "")
+        .replaceAll(")", "");
   }
 }

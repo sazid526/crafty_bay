@@ -1,7 +1,11 @@
+import 'package:crafty_bay/data/models/product_model.dart';
 import 'package:crafty_bay/presentation/state_holders/auth_controller.dart';
 import 'package:crafty_bay/presentation/state_holders/category_controller.dart';
 import 'package:crafty_bay/presentation/state_holders/home_banner_controller.dart';
 import 'package:crafty_bay/presentation/state_holders/main_bottom_nav_controller.dart';
+import 'package:crafty_bay/presentation/state_holders/new_product_controller.dart';
+import 'package:crafty_bay/presentation/state_holders/popular_product_controller.dart';
+import 'package:crafty_bay/presentation/state_holders/spacial_product_controller.dart';
 import 'package:crafty_bay/presentation/ui/screens/auth/verify_email_screen.dart';
 import 'package:crafty_bay/presentation/ui/screens/category_screen.dart';
 import 'package:crafty_bay/presentation/ui/screens/product_list_screen.dart';
@@ -65,16 +69,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
               categoryList,
-              const SizedBox(
-                height: 8,
-              ),
               SectionTitle(
                 title: "Populer",
                 onTapSeeAll: () {
                   Get.to(ProductListScreen());
                 },
               ),
-              productList,
+              GetBuilder<PopularProductController>(
+                builder: (popularProductController) {
+                  return Visibility(
+                    visible: popularProductController.inProgess == false,
+                    replacement: const CenterCirculerProgressIndicator(),
+                    child: productList(
+                      popularProductController.productListModel.productList ?? []
+                    ),
+                  );
+                }
+              ),
               const SizedBox(
                 height: 8,
               ),
@@ -82,7 +93,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: "Special",
                 onTapSeeAll: () {},
               ),
-              productList,
+              GetBuilder<SpacialProductController>(
+                  builder: (spacialProductController) {
+                    return Visibility(
+                      visible: spacialProductController.inProgess == false,
+                      replacement: const CenterCirculerProgressIndicator(),
+                      child: productList(
+                          spacialProductController.productListModel.productList ?? []
+                      ),
+                    );
+                  }
+              ),
               const SizedBox(
                 height: 8,
               ),
@@ -90,7 +111,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: "New",
                 onTapSeeAll: () {},
               ),
-              productList,
+              GetBuilder<NewProductController>(
+                  builder: (newProductController) {
+                    return Visibility(
+                      visible: newProductController.inProgess == false,
+                      replacement: const CenterCirculerProgressIndicator(),
+                      child: productList(
+                          newProductController.productListModel.productList ?? []
+                      ),
+                    );
+                  }
+              ),
             ],
           ),
         ),
@@ -126,16 +157,17 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-  SizedBox get productList {
+  SizedBox  productList(List<ProductModel> productList) {
     return SizedBox(
       height: 190,
       child: ListView.separated(
-        itemCount: 10,
+        itemCount: productList.length,
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
-          return const ProductCardItem();
+          return  ProductCardItem(
+            product: productList[index],
+          );
         },
         separatorBuilder: (_, __) {
           return const SizedBox(

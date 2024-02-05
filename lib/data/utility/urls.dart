@@ -8,4 +8,14 @@ class Urls {
   static String createProfile = "$_baseUrl/CreateProfile";
   static String homeBanner = "$_baseUrl/ListProductSlider";
   static String categoryList = "$_baseUrl/CategoryList";
+  static String popularProduct = "$_baseUrl/ListProductByRemark/Popular";
+  static String spacialProduct = "$_baseUrl/ListProductByRemark/special";
+  static String newProduct = "$_baseUrl/ListProductByRemark/New";
+  static String productByCategory(int categoryId) => "$_baseUrl/ListProductByCategory/$categoryId";
+  static String productList(int productId) => "$_baseUrl/ProductDetailsById/$productId";
+  static String addToCart = "$_baseUrl/CreateCartList";
+
+
+
+
 }

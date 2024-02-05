@@ -18,8 +18,9 @@ class CategoryItem extends StatelessWidget {
     return GestureDetector(
       onTap: (){
         Get.to(
-            ()=>const ProductListScreen(
-              category: "Electronics",
+            ()=> ProductListScreen(
+              category: category.categoryName ?? "",
+              categoryId: category.id,
             )
         );
       },

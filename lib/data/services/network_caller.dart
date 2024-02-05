@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:crafty_bay/data/models/response_data.dart';
+import 'package:crafty_bay/presentation/state_holders/auth_controller.dart';
 import 'package:http/http.dart';
 
 class NetworkCaller {
@@ -39,7 +40,7 @@ class NetworkCaller {
     final Response response = await post(
       Uri.parse(url),
       body: jsonEncode(body),
-      headers: {"token": token.toString(), "Content-type": "application/json"},
+      headers: {"token": AuthController.token.toString(), "Content-type": "application/json"},
     );
     log(response.statusCode.toString());
     log(response.body.toString());

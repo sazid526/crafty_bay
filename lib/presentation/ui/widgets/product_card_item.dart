@@ -1,3 +1,4 @@
+import 'package:crafty_bay/data/models/product_model.dart';
 import 'package:crafty_bay/presentation/ui/screens/product_details_screen.dart';
 import 'package:crafty_bay/presentation/ui/utility/app_color.dart';
 import 'package:crafty_bay/presentation/ui/utility/assets_path.dart';
@@ -6,14 +7,18 @@ import 'package:get/get.dart';
 
 class ProductCardItem extends StatelessWidget {
   const ProductCardItem({
-    super.key,
+    super.key, required this.product,
   });
+
+  final ProductModel product;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        Get.to(ProductDetailsScreen());
+        Get.to(ProductDetailsScreen(
+          productId: product.id!,
+        ));
       },
       borderRadius: BorderRadius.circular(16),
       child: SizedBox(
@@ -30,8 +35,8 @@ class ProductCardItem extends StatelessWidget {
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(16),
                       topRight: Radius.circular(16)),
-                  child: Image.asset(
-                    AssetsPath.dummyShoeImage,
+                  child: Image.network(
+                    product.image ?? "",
                     width: 160,
                     height: 120,
                     fit: BoxFit.cover,
@@ -41,7 +46,7 @@ class ProductCardItem extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Nike show 120h",style: TextStyle(
+                    Text(product.title ?? "",style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                         color: Colors.grey
@@ -49,7 +54,7 @@ class ProductCardItem extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("\$120",style: TextStyle(
+                        Text("\$${product.price ?? 0}",style:const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             color: AppColors.primaryColor
@@ -57,8 +62,8 @@ class ProductCardItem extends StatelessWidget {
                         Wrap(
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
-                            Icon(Icons.star,size: 14,color: Colors.amber,),
-                            Text("4.4",style: TextStyle(
+                           const Icon(Icons.star,size: 14,color: Colors.amber,),
+                            Text("${product.star ?? 0}",style:const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.black45
@@ -70,8 +75,8 @@ class ProductCardItem extends StatelessWidget {
                               borderRadius: BorderRadius.circular(4)
                           ),
                           color: AppColors.primaryColor,
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0),
+                          child:const Padding(
+                            padding:  EdgeInsets.all(2.0),
                             child: Icon(Icons.favorite_border_rounded,size: 10,color: Colors.white,),
                           ),
                         )
