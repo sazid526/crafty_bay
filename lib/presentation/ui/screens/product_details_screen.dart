@@ -41,7 +41,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     "XXXL",
   ];
 
-  String? _selectedColor;
+  Color? _selectedColor;
   String? _selectedSize;
 
   @override
@@ -58,32 +58,31 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       ),
       body: GetBuilder<ProductDetailsController>(
           builder: (productDetailsController) {
-        return Visibility(
-          visible: productDetailsController.inProgress == false,
-          replacement: const CenterCirculerProgressIndicator(),
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      ProductImageCarousel(
-                        urls: [
-                          productDetailsController.productDetails.img1 ?? '',
-                          productDetailsController.productDetails.img2 ?? '',
-                          productDetailsController.productDetails.img3 ?? '',
-                          productDetailsController.productDetails.img4 ?? '',
-                        ],
-                      ),
-                      productDetailsBody(
-                          productDetailsController.productDetails),
-                    ],
-                  ),
+            if(productDetailsController.inProgress){
+              return const CenterCirculerProgressIndicator();
+            }
+        return Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    ProductImageCarousel(
+                      urls: [
+                        productDetailsController.productDetails.img1 ?? '',
+                        productDetailsController.productDetails.img2 ?? '',
+                        productDetailsController.productDetails.img3 ?? '',
+                        productDetailsController.productDetails.img4 ?? '',
+                      ],
+                    ),
+                    productDetailsBody(
+                        productDetailsController.productDetails),
+                  ],
                 ),
               ),
-              priceAndAddToCartSection
-            ],
-          ),
+            ),
+            priceAndAddToCartSection
+          ],
         );
       }),
     );
@@ -135,7 +134,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ColorSelector(
               colors: productDetails.color?.split(",").map((e) => getColorFromString(e)).toList() ?? [],
               onChange: (selectedColor) {
-                _selectedColor = selectedColor.toString();
+               final stringColor = colorToString;
               }),
           SizedBox(
             height: 16,
@@ -171,7 +170,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  Row  ReviewAndRatingRow(double rating) {
+  Row  ReviewAndRatingRow(int rating) {
     return Row(
       children: [
         Wrap(
@@ -266,10 +265,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     onPressed: () async{
                       if(_selectedSize!=null && _selectedColor != null ){
                         if(Get.find<AuthController>().isTokenNotNull){
-                          _selectedColor = colorToHashColorCode(_selectedColor!);
+                          final stringColor = colorToString(_selectedColor!);
                           final response = await addToCartController.addToCart(
                               widget.productId,
-                              _selectedColor!,
+                              stringColor,
                               _selectedSize!);
                           if(response){
                             Get.showSnackbar(const GetSnackBar(
@@ -306,16 +305,39 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
   
-  Color getColorFromString(String colorCode){
-    String code = colorCode.replaceAll("#", '');
-    String hexCode = 'FF$code';
-    return Color(int.parse('0x$hexCode'));
+  Color getColorFromString(String color){
+    color = color.toLowerCase();
+    if(color == "red"){
+      return Colors.red;
+    }else if(color == "white"){
+      return Colors.white;
+    }else if(color == "green"){
+      return Colors.green;
+    }
+    return Colors.grey;
   }
-  
-  String colorToHashColorCode(String colorCode){
-    return colorCode.toString()
-        .replaceAll("0xff", "#")
-        .replaceAll("Color(", "")
-        .replaceAll(")", "");
+
+  String colorToString(Color color){
+    if(color == Colors.red){
+      return "Red";
+    }else if(color == Colors.white){
+      return "White";
+    }else if(color == Colors.green){
+      return "Green";
+    }
+    return "Grey";
   }
+
+  // Color getColorFromString(String colorCode){
+  //   String code = colorCode.replaceAll("#", '');
+  //   String hexCode = 'FF$code';
+  //   return Color(int.parse('0x$hexCode'));
+  // }
+  //
+  // String colorToHashColorCode(String colorCode){
+  //   return colorCode.toString()
+  //       .replaceAll("0xff", "#")
+  //       .replaceAll("Color(", "")
+  //       .replaceAll(")", "");
+  // }
 }

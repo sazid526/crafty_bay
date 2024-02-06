@@ -1,48 +1,23 @@
-class Profile {
-  int? id;
-  String? firstName;
-  String? lastName;
-  String? mobile;
-  String? city;
-  String? shippingAddress;
-  String? email;
-  String? createdAt;
-  String? updatedAt;
+import 'package:crafty_bay/data/models/profile_data.dart';
 
-  Profile(
-      {this.id,
-        this.firstName,
-        this.lastName,
-        this.mobile,
-        this.city,
-        this.shippingAddress,
-        this.email,
-        this.createdAt,
-        this.updatedAt});
+class Profile {
+  String? msg;
+  ProfileData? profileData;
+
+  Profile({this.msg, this.profileData});
 
   Profile.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    firstName = json['firstName'];
-    lastName = json['lastName'];
-    mobile = json['mobile'];
-    city = json['city'];
-    shippingAddress = json['shippingAddress'];
-    email = json['email'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
+    msg = json['msg'];
+    profileData = json['data'] != null ?  ProfileData.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['firstName'] = firstName;
-    data['lastName'] = lastName;
-    data['mobile'] = mobile;
-    data['city'] = city;
-    data['shippingAddress'] = shippingAddress;
-    data['email'] = email;
-    data['created_at'] = createdAt;
-    data['updated_at'] = updatedAt;
+    final Map<String, dynamic> data =  <String, dynamic>{};
+    data['msg'] = msg;
+    if (profileData != null) {
+      data['data'] = profileData!.toJson();
+    }
     return data;
   }
 }
+

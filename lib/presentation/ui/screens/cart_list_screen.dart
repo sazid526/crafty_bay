@@ -1,19 +1,28 @@
+import 'package:crafty_bay/presentation/state_holders/cart_list_controller.dart';
 import 'package:crafty_bay/presentation/state_holders/main_bottom_nav_controller.dart';
 import 'package:crafty_bay/presentation/ui/utility/app_color.dart';
-import 'package:crafty_bay/presentation/ui/utility/assets_path.dart';
 import 'package:crafty_bay/presentation/ui/widgets/Carts/cart_prodcut_item.dart';
+import 'package:crafty_bay/presentation/ui/widgets/center_circuler_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:item_count_number_button/item_count_number_button.dart';
 
-class CartScreen extends StatefulWidget {
-  const CartScreen({super.key});
+class CartListScreen extends StatefulWidget {
+  const CartListScreen({super.key});
 
   @override
-  State<CartScreen> createState() => _CartScreenState();
+  State<CartListScreen> createState() => _CartListScreenState();
 }
 
-class _CartScreenState extends State<CartScreen> {
+class _CartListScreenState extends State<CartListScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Get.find<CartListController>().getCartList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -31,21 +40,28 @@ class _CartScreenState extends State<CartScreen> {
             icon: const Icon(Icons.arrow_back_ios),
           ),
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: ListView.separated(
-                  itemBuilder: (context, index){
-                    return const CartProductItem();
-                  },
-                  separatorBuilder: (_,__) => const SizedBox(
-                    height: 8,
-                  ),
-                  itemCount: 4
-              )
-            ),
-            totalPriceAndCheckoutSection
-          ],
+        body: GetBuilder<CartListController>(
+          builder: (cartListController) {
+            if(cartListController.inProgress == false){
+              return const CenterCirculerProgressIndicator();
+            }
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.separated(
+                      itemBuilder: (context, index){
+                        return const CartProductItem();
+                      },
+                      separatorBuilder: (_,__) => const SizedBox(
+                        height: 8,
+                      ),
+                      itemCount: 4
+                  )
+                ),
+                totalPriceAndCheckoutSection
+              ],
+            );
+          }
         ),
       ),
     );

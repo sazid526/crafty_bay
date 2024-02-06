@@ -41,7 +41,7 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
                 const SizedBox(height:24),
                 PinCodeTextField(
                   controller: _otpTEcontroller,
-                  length: 4,
+                  length: 6,
                   obscureText: false,
 
                   pinTheme: PinTheme(

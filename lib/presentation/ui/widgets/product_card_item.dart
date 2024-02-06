@@ -38,7 +38,7 @@ class ProductCardItem extends StatelessWidget {
                   child: Image.network(
                     product.image ?? "",
                     width: 160,
-                    height: 120,
+                    height: 110,
                     fit: BoxFit.cover,
                   )),
               Padding(
