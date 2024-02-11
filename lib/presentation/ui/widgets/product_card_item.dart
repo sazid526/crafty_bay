@@ -54,7 +54,7 @@ class ProductCardItem extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("\$${product.price ?? 0}",style:const TextStyle(
+                        Text("৳${product.price ?? 0}",style:const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             color: AppColors.primaryColor

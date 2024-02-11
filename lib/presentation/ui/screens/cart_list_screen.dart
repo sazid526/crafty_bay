@@ -1,5 +1,6 @@
 import 'package:crafty_bay/presentation/state_holders/cart_list_controller.dart';
 import 'package:crafty_bay/presentation/state_holders/main_bottom_nav_controller.dart';
+import 'package:crafty_bay/presentation/ui/screens/checkout_screen.dart';
 import 'package:crafty_bay/presentation/ui/utility/app_color.dart';
 import 'package:crafty_bay/presentation/ui/widgets/Carts/cart_prodcut_item.dart';
 import 'package:crafty_bay/presentation/ui/widgets/center_circuler_progress_indicator.dart';
@@ -42,23 +43,25 @@ class _CartListScreenState extends State<CartListScreen> {
         ),
         body: GetBuilder<CartListController>(
           builder: (cartListController) {
-            if(cartListController.inProgress == false){
+            if(cartListController.inProgress == true){
               return const CenterCirculerProgressIndicator();
             }
             return Column(
               children: [
                 Expanded(
                   child: ListView.separated(
+                    itemCount: cartListController.cartListModel.cartItemList?.length ?? 0,
                       itemBuilder: (context, index){
-                        return const CartProductItem();
+                        return  CartProductItem(
+                          cartItem: cartListController.cartListModel.cartItemList![index],
+                        );
                       },
                       separatorBuilder: (_,__) => const SizedBox(
                         height: 8,
                       ),
-                      itemCount: 4
                   )
                 ),
-                totalPriceAndCheckoutSection
+                totalPriceAndCheckoutSection(cartListController.totalPrice)
               ],
             );
           }
@@ -67,7 +70,7 @@ class _CartListScreenState extends State<CartListScreen> {
     );
   }
 
-  Container get totalPriceAndCheckoutSection {
+  Container  totalPriceAndCheckoutSection(RxDouble totalPrice) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -80,7 +83,7 @@ class _CartListScreenState extends State<CartListScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Column(
+           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -90,19 +93,21 @@ class _CartListScreenState extends State<CartListScreen> {
                     fontWeight: FontWeight.w600,
                     color: Colors.black45),
               ),
-              Text(
-                "\$120",
+              Obx(() => Text(
+                "৳$totalPrice",
                 style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     color: AppColors.primaryColor),
-              ),
+              ),)
             ],
           ),
           SizedBox(
             width: 100,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Get.to(const CheckoutScreen());
+              },
               child: const Text("Check Out"),
             ),
           )

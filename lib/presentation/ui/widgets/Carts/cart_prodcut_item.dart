@@ -1,30 +1,45 @@
+import 'package:crafty_bay/data/models/cart_item.dart';
+import 'package:crafty_bay/presentation/state_holders/cart_list_controller.dart';
 import 'package:crafty_bay/presentation/ui/utility/app_color.dart';
 import 'package:crafty_bay/presentation/ui/utility/assets_path.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:item_count_number_button/item_count_number_button.dart';
 
 class CartProductItem extends StatefulWidget {
-  const CartProductItem({super.key});
+  const CartProductItem({super.key, required this.cartItem});
+
+  final CartItem cartItem;
 
   @override
   State<CartProductItem> createState() => _CartProductItemState();
 }
 
 class _CartProductItemState extends State<CartProductItem> {
+  late ValueNotifier<int> noOfItems = ValueNotifier(widget.cartItem.quantity);
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    print(widget.cartItem.quantity);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-
-    ValueNotifier<int> noOfItems = ValueNotifier(1);
 
     return Card(
       elevation: 3,
       child: Row(
         children: [
-          Image.asset(
-            AssetsPath.dummyShoeImage,
+          Image.network(
+            widget.cartItem.product?.image ?? "",
             width: 100,
           ),
-          const SizedBox(width: 8,),
+          const SizedBox(
+            width: 8,
+          ),
           Expanded(
             child: Column(
               children: [
@@ -35,45 +50,51 @@ class _CartProductItemState extends State<CartProductItem> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Nike show 12kmn 2021 edition",
+                            widget.cartItem.product?.title ?? "",
                             maxLines: 1,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.black54,
-                                overflow: TextOverflow.ellipsis
-                            ),),
+                                overflow: TextOverflow.ellipsis),
+                          ),
                           Row(
                             children: [
-                              Text("Color: Red"),
-                              SizedBox(width: 8,),
-                              Text("Size XL")
+                              Text("Color : ${widget.cartItem.color ?? ""}"),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text("Size : ${widget.cartItem.size ?? ""}"),
                             ],
                           )
                         ],
                       ),
                     ),
-                    IconButton(onPressed: (){
-
-                    }, icon: Icon(Icons.delete,color: Colors.grey,),)
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.delete,
+                        color: Colors.grey,
+                      ),
+                    )
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "\$100",
-                      style: TextStyle(
+                      "৳${widget.cartItem.product?.price ?? 0}",
+                      style:const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: AppColors.primaryColor),
                     ),
                     ValueListenableBuilder(
                         valueListenable: noOfItems,
-                        builder: (context,value,_) {
+                        builder: (context, value, _) {
                           return ItemCount(
-                            initialValue: 1,
-                            minValue: 0,
+                            initialValue: value,
+                            minValue: 1,
                             maxValue: 20,
                             decimalPlaces: 0,
                             step: 1,
@@ -81,10 +102,11 @@ class _CartProductItemState extends State<CartProductItem> {
                             onChanged: (v) {
                               // Handle counter value changes
                               noOfItems.value = v.toInt();
+                              Get.find<CartListController>().updateQuantity(widget.cartItem.id!, noOfItems.value);
+
                             },
                           );
-                        }
-                    ),
+                        }),
                   ],
                 )
               ],
@@ -95,4 +117,3 @@ class _CartProductItemState extends State<CartProductItem> {
     );
   }
 }
-

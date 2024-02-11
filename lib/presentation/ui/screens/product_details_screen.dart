@@ -47,6 +47,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   @override
   void initState() {
     super.initState();
+    print(AuthController.token);
     Get.find<ProductDetailsController>().getProductDetails(widget.productId);
   }
 
@@ -58,9 +59,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       ),
       body: GetBuilder<ProductDetailsController>(
           builder: (productDetailsController) {
-            if(productDetailsController.inProgress){
-              return const CenterCirculerProgressIndicator();
-            }
+        if (productDetailsController.inProgress) {
+          return const CenterCirculerProgressIndicator();
+        }
         return Column(
           children: [
             Expanded(
@@ -75,8 +76,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         productDetailsController.productDetails.img4 ?? '',
                       ],
                     ),
-                    productDetailsBody(
-                        productDetailsController.productDetails),
+                    productDetailsBody(productDetailsController.productDetails),
                   ],
                 ),
               ),
@@ -106,8 +106,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   valueListenable: noOfItems,
                   builder: (context, value, _) {
                     return ItemCount(
-                      initialValue: 1,
-                      minValue: 0,
+                      initialValue: value,
+                      minValue: 1,
                       maxValue: 20,
                       decimalPlaces: 0,
                       step: 1,
@@ -132,10 +132,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
           ),
           ColorSelector(
-              colors: productDetails.color?.split(",").map((e) => getColorFromString(e)).toList() ?? [],
-              onChange: (selectedColor) {
-               final stringColor = colorToString;
-              }),
+            colors: productDetails.color
+                    ?.split(",")
+                    .map((e) => getColorFromString(e))
+                    .toList() ??
+                [],
+            onChange: (selectedColor) {
+              _selectedColor = selectedColor;
+            },
+          ),
           SizedBox(
             height: 16,
           ),
@@ -147,9 +152,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             height: 8,
           ),
           SizeSelector(
-              sizes: productDetails.size?.split(",") ?? [], onChange: (s) {
+              sizes: productDetails.size?.split(",") ?? [],
+              onChange: (s) {
                 _selectedSize = s;
-          }),
+              }),
           SizedBox(
             height: 16,
           ),
@@ -170,7 +176,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  Row  ReviewAndRatingRow(int rating) {
+  Row ReviewAndRatingRow(int rating) {
     return Row(
       children: [
         Wrap(
@@ -185,7 +191,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               width: 2,
             ),
             Text(
-             rating.toStringAsPrecision(2),
+              rating.toStringAsPrecision(2),
               style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -256,73 +262,74 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
           SizedBox(
             width: 100,
-            child: GetBuilder<AddToCartController>(
-              builder: (addToCartController) {
-                return Visibility(
-                  visible: addToCartController.inProgress == false,
-                  replacement: const CenterCirculerProgressIndicator(),
-                  child: ElevatedButton(
-                    onPressed: () async{
-                      if(_selectedSize!=null && _selectedColor != null ){
-                        if(Get.find<AuthController>().isTokenNotNull){
-                          final stringColor = colorToString(_selectedColor!);
-                          final response = await addToCartController.addToCart(
-                              widget.productId,
-                              stringColor,
-                              _selectedSize!);
-                          if(response){
-                            Get.showSnackbar(const GetSnackBar(
-                              title: "Success",
-                              message: "This Product has been added to cart",
-                              duration: Duration(seconds: 2),
-                            ));
-                          }else{
-                            Get.showSnackbar(GetSnackBar(
-                              title: "Failed",
-                              message: addToCartController.errorMessage,
-                              duration: Duration(seconds: 2),
-                            ));
-                          }
-                        }else{
-                          Get.to( const VerifyEmailScreen());
+            child:
+                GetBuilder<AddToCartController>(builder: (addToCartController) {
+              return Visibility(
+                visible: addToCartController.inProgress == false,
+                replacement: const CenterCirculerProgressIndicator(),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (_selectedColor != null && _selectedSize != null) {
+                      if (Get.find<AuthController>().isTokenNotNull) {
+                        final response = await addToCartController.addToCart(
+                            widget.productId,
+                            "color",
+                            _selectedSize!,
+                            noOfItems.value);
+                        if (response) {
+                          print(response);
+                          Get.showSnackbar(const GetSnackBar(
+                            title: "Success",
+                            message: "This Product has been added to cart",
+                            duration: Duration(seconds: 2),
+                          ));
+                        } else {
+                          print(response);
+                          Get.showSnackbar(GetSnackBar(
+                            title: "Failed",
+                            message: addToCartController.errorMessage,
+                            duration: Duration(seconds: 2),
+                          ));
                         }
                       }else{
-                        Get.showSnackbar(const GetSnackBar(
-                          title: "Add to cart failed",
-                          message: "Please select color and size",
-                          duration: Duration(seconds: 2),
-                        ));
+                        Get.to(const VerifyEmailScreen());
                       }
-                    },
-                    child: const Text("Add To Cart"),
-                  ),
-                );
-              }
-            ),
+                    }else{
+                      Get.showSnackbar( GetSnackBar(
+                        title: "Add to cart Failed",
+                        message: addToCartController.errorMessage,
+                        duration: const Duration(seconds: 2),
+                      ));
+                    }
+                  },
+                  child: const Text("Add To Cart"),
+                ),
+              );
+            }),
           )
         ],
       ),
     );
   }
-  
-  Color getColorFromString(String color){
+
+  Color getColorFromString(String color) {
     color = color.toLowerCase();
-    if(color == "red"){
+    if (color == "red") {
       return Colors.red;
-    }else if(color == "white"){
+    } else if (color == "white") {
       return Colors.white;
-    }else if(color == "green"){
+    } else if (color == "green") {
       return Colors.green;
     }
     return Colors.grey;
   }
 
-  String colorToString(Color color){
-    if(color == Colors.red){
+  String colorToString(Color color) {
+    if (color == Colors.red) {
       return "Red";
-    }else if(color == Colors.white){
+    } else if (color == Colors.white) {
       return "White";
-    }else if(color == Colors.green){
+    } else if (color == Colors.green) {
       return "Green";
     }
     return "Grey";
