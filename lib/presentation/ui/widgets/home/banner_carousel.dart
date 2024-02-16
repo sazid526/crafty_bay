@@ -39,7 +39,8 @@ class _BannerCarouselState extends State<BannerCarousel> {
                   children: [
                     Container(
                       width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.symmetric(horizontal: 5.0),
+                      height: 180,
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
                       decoration: BoxDecoration(
                           color: AppColors.primaryColor,
                           borderRadius: BorderRadius.circular(8),
@@ -55,9 +56,9 @@ class _BannerCarouselState extends State<BannerCarousel> {
                           SizedBox(
                             width: 100,
                             child: Text(banner.title ?? "", style: const TextStyle(
-                              color:  Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600
+                                color:  Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600
                             ),),
                           ),
                           const SizedBox(height: 8,),
