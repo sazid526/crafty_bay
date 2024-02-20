@@ -1,5 +1,4 @@
-import 'package:crafty_bay/data/models/brand_model.dart';
-import 'package:crafty_bay/data/models/category_list_item.dart';
+
 import 'package:crafty_bay/data/models/product_model.dart';
 
 class ProductListModel {

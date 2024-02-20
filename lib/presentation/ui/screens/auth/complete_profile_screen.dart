@@ -15,21 +15,31 @@ class CompleteProfileScreen extends StatefulWidget {
 }
 
 class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
-  final TextEditingController _customerNameTEcontroller = TextEditingController();
-  final TextEditingController _customerAddressTEcontroller = TextEditingController();
-  final TextEditingController _customerCityTEcontroller = TextEditingController();
-  final TextEditingController _customerStateTEcontroller = TextEditingController();
-  final TextEditingController _customerPostCodeTEcontroller = TextEditingController();
-  final TextEditingController _customerCountryTEcontroller = TextEditingController();
-  final TextEditingController _customerPhoneTEcontroller = TextEditingController();
-  final TextEditingController _customerFaxTEcontroller = TextEditingController();
+  final TextEditingController _customerNameTEcontroller =
+      TextEditingController();
+  final TextEditingController _customerAddressTEcontroller =
+      TextEditingController();
+  final TextEditingController _customerCityTEcontroller =
+      TextEditingController();
+  final TextEditingController _customerStateTEcontroller =
+      TextEditingController();
+  final TextEditingController _customerPostCodeTEcontroller =
+      TextEditingController();
+  final TextEditingController _customerCountryTEcontroller =
+      TextEditingController();
+  final TextEditingController _customerPhoneTEcontroller =
+      TextEditingController();
+  final TextEditingController _customerFaxTEcontroller =
+      TextEditingController();
   final TextEditingController _shipNameTEcontroller = TextEditingController();
   final TextEditingController _shipAddressTEcontroller =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _shipCityTEcontroller = TextEditingController();
   final TextEditingController _shipStateTEcontroller = TextEditingController();
-  final TextEditingController _shipPostCodeTEcontroller = TextEditingController();
-  final TextEditingController _shipCountryTEcontroller = TextEditingController();
+  final TextEditingController _shipPostCodeTEcontroller =
+      TextEditingController();
+  final TextEditingController _shipCountryTEcontroller =
+      TextEditingController();
   final TextEditingController _shipPhoneTEcontroller = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -95,7 +105,8 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       return null;
                     }
                   },
-                  decoration: const InputDecoration(hintText: "Enter your city"),
+                  decoration:
+                      const InputDecoration(hintText: "Enter your city"),
                   textInputAction: TextInputAction.next,
                 ),
                 const SizedBox(height: 16),
@@ -108,7 +119,8 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       return null;
                     }
                   },
-                  decoration: const InputDecoration(hintText: "Enter your state"),
+                  decoration:
+                      const InputDecoration(hintText: "Enter your state"),
                   textInputAction: TextInputAction.next,
                 ),
                 const SizedBox(height: 16),
@@ -121,7 +133,8 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       return null;
                     }
                   },
-                  decoration: const InputDecoration(hintText: "Enter your postCode"),
+                  decoration:
+                      const InputDecoration(hintText: "Enter your postCode"),
                   textInputAction: TextInputAction.next,
                 ),
                 const SizedBox(height: 16),
@@ -134,7 +147,8 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       return null;
                     }
                   },
-                  decoration: const InputDecoration(hintText: "Enter your country"),
+                  decoration:
+                      const InputDecoration(hintText: "Enter your country"),
                   textInputAction: TextInputAction.next,
                 ),
                 const SizedBox(height: 16),
@@ -147,7 +161,8 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       return null;
                     }
                   },
-                  decoration: const InputDecoration(hintText: "Enter your phone"),
+                  decoration:
+                      const InputDecoration(hintText: "Enter your phone"),
                   textInputAction: TextInputAction.next,
                 ),
                 const SizedBox(height: 16),
@@ -201,8 +216,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       return null;
                     }
                   },
-                  decoration:
-                  const InputDecoration(hintText: "Shipping City"),
+                  decoration: const InputDecoration(hintText: "Shipping City"),
                   textInputAction: TextInputAction.next,
                 ),
                 const SizedBox(height: 16),
@@ -215,8 +229,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       return null;
                     }
                   },
-                  decoration:
-                  const InputDecoration(hintText: "Shipping State"),
+                  decoration: const InputDecoration(hintText: "Shipping State"),
                   textInputAction: TextInputAction.next,
                 ),
                 const SizedBox(height: 16),
@@ -229,9 +242,8 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       return null;
                     }
                   },
-
                   decoration:
-                  const InputDecoration(hintText: "Shipping PostCode"),
+                      const InputDecoration(hintText: "Shipping PostCode"),
                   textInputAction: TextInputAction.next,
                 ),
                 const SizedBox(height: 16),
@@ -244,9 +256,8 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       return null;
                     }
                   },
-
                   decoration:
-                  const InputDecoration(hintText: "Shipping Country"),
+                      const InputDecoration(hintText: "Shipping Country"),
                   textInputAction: TextInputAction.next,
                 ),
                 const SizedBox(height: 16),
@@ -259,64 +270,74 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       return null;
                     }
                   },
-                  decoration:
-                  const InputDecoration(hintText: "Shipping Phone"),
+                  decoration: const InputDecoration(hintText: "Shipping Phone"),
                   textInputAction: TextInputAction.next,
                 ),
                 const SizedBox(height: 16),
                 SizedBox(
                   width: double.infinity,
                   child: GetBuilder<CompleteProfileController>(
-                      builder: (completeProfileController) {
-                    return Visibility(
-                      visible: completeProfileController.inProgress == false,
-                      replacement: const CenterCirculerProgressIndicator(),
-                      child: ElevatedButton(
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              final createProfileParams = CreateProfileParams(
-                                customerName: _customerNameTEcontroller.text.trim(),
-                                customerAddress: _customerAddressTEcontroller.text.trim(),
-                                customerCity: _customerCityTEcontroller.text.trim(),
-                                customerState: _customerStateTEcontroller.text.trim(),
-                                customerPostCode: _customerPostCodeTEcontroller.text.trim(),
-                                customerCountry: _customerCountryTEcontroller.text.trim(),
-                                customerPhone: _customerPhoneTEcontroller.text.trim(),
-                                customerFax: _customerFaxTEcontroller.text.trim(),
-                                shipName: _shipNameTEcontroller.text.trim(),
-                                shipAddress:
-                                _shipAddressTEcontroller.text.trim(),
-                                shipCity: _shipCityTEcontroller.text.trim(),
-                                shipState:
-                                _shipStateTEcontroller.text.trim(),
-                                shipPostCode: _shipPostCodeTEcontroller.text.trim(),
-                                shipCountry:
-                                _shipCountryTEcontroller.text.trim(),
-                                shipPhone: _shipPhoneTEcontroller.text.trim(),
-                              );
-                              final bool result = await completeProfileController
-                                  .createProfileData(
-                                  Get
-                                      .find<VerifyOTPcontroller>()
-                                      .token,
-                                  createProfileParams);
+                    builder: (completeProfileController) {
+                      return Visibility(
+                        visible: completeProfileController.inProgress == false,
+                        replacement: const CenterCirculerProgressIndicator(),
+                        child: ElevatedButton(
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                final createProfileParams = CreateProfileParams(
+                                  customerName:
+                                      _customerNameTEcontroller.text.trim(),
+                                  customerAddress:
+                                      _customerAddressTEcontroller.text.trim(),
+                                  customerCity:
+                                      _customerCityTEcontroller.text.trim(),
+                                  customerState:
+                                      _customerStateTEcontroller.text.trim(),
+                                  customerPostCode:
+                                      _customerPostCodeTEcontroller.text.trim(),
+                                  customerCountry:
+                                      _customerCountryTEcontroller.text.trim(),
+                                  customerPhone:
+                                      _customerPhoneTEcontroller.text.trim(),
+                                  customerFax:
+                                      _customerFaxTEcontroller.text.trim(),
+                                  shipName: _shipNameTEcontroller.text.trim(),
+                                  shipAddress:
+                                      _shipAddressTEcontroller.text.trim(),
+                                  shipCity: _shipCityTEcontroller.text.trim(),
+                                  shipState: _shipStateTEcontroller.text.trim(),
+                                  shipPostCode:
+                                      _shipPostCodeTEcontroller.text.trim(),
+                                  shipCountry:
+                                      _shipCountryTEcontroller.text.trim(),
+                                  shipPhone: _shipPhoneTEcontroller.text.trim(),
+                                );
+                                final bool result =
+                                    await completeProfileController
+                                        .createProfileData(
+                                            Get.find<VerifyOTPcontroller>()
+                                                .token,
+                                            createProfileParams);
 
-                              if (result) {
-                                Get.offAll(const MainBottomNavScreen());
-                              } else {
-                                Get.showSnackbar(GetSnackBar(
-                                  title: "Complete Profile Failed",
-                                  message: completeProfileController
-                                      .errorMassage,
-                                  duration: const Duration(seconds: 2),
-                                  isDismissible: true,
-                                ));
+                                if (result) {
+                                  Get.offAll(const MainBottomNavScreen());
+                                } else {
+                                  Get.showSnackbar(
+                                    GetSnackBar(
+                                      title: "Complete Profile Failed",
+                                      message: completeProfileController
+                                          .errorMassage,
+                                      duration: const Duration(seconds: 2),
+                                      isDismissible: true,
+                                    ),
+                                  );
+                                }
                               }
-                            }
-                          },
-                          child: Text("Complete")),
-                    );
-                  }),
+                            },
+                            child: Text("Complete")),
+                      );
+                    },
+                  ),
                 )
               ],
             ),
@@ -344,9 +365,6 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
     _shipPostCodeTEcontroller.dispose();
     _shipCountryTEcontroller.dispose();
     _shipPhoneTEcontroller.dispose();
-
-
-
 
     super.dispose();
   }

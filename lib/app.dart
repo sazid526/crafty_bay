@@ -1,9 +1,5 @@
 import 'package:crafty_bay/controller_binder.dart';
 import 'package:crafty_bay/presentation/ui/screens/auth/splash_screen.dart';
-import 'package:crafty_bay/presentation/ui/screens/cart_list_screen.dart';
-import 'package:crafty_bay/presentation/ui/screens/main_bottom_nav_screen.dart';
-import 'package:crafty_bay/presentation/ui/screens/product_details_screen.dart';
-import 'package:crafty_bay/presentation/ui/screens/product_list_screen.dart';
 import 'package:crafty_bay/presentation/ui/utility/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,26 +18,26 @@ class CraftyBay extends StatelessWidget {
           color: AppColors.primaryColor
         ),
         inputDecorationTheme:  InputDecorationTheme(
-          contentPadding: EdgeInsets.symmetric(horizontal: 16,vertical: 8),
+          contentPadding:const EdgeInsets.symmetric(horizontal: 16,vertical: 8),
           hintStyle: TextStyle(
             color: Colors.grey.shade400
           ),
-          border: OutlineInputBorder(
+          border: const OutlineInputBorder(
             borderSide: BorderSide(
               color: AppColors.primaryColor
             )
           ),
-          focusedBorder: OutlineInputBorder(
+          focusedBorder:const OutlineInputBorder(
               borderSide: BorderSide(
                   color: AppColors.primaryColor
               )
           ),
-          enabledBorder: OutlineInputBorder(
+          enabledBorder:const OutlineInputBorder(
               borderSide: BorderSide(
                   color: AppColors.primaryColor
               )
           ),
-          errorBorder: OutlineInputBorder(
+          errorBorder:const OutlineInputBorder(
               borderSide: BorderSide(
                   color: Colors.red
               )
@@ -49,7 +45,7 @@ class CraftyBay extends StatelessWidget {
 
         ),
         textTheme: TextTheme(
-          titleLarge: TextStyle(
+          titleLarge: const TextStyle(
             fontSize: 32,
             fontWeight: FontWeight.bold
           ),
@@ -85,7 +81,7 @@ class CraftyBay extends StatelessWidget {
           elevation: 5
         )
       ),
-      home: SplashScreen(),
+      home:const SplashScreen(),
       initialBinding: ControllerBinder(),
     );
   }

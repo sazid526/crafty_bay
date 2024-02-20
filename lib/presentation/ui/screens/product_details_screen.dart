@@ -4,6 +4,7 @@ import 'package:crafty_bay/presentation/state_holders/auth_controller.dart';
 import 'package:crafty_bay/presentation/state_holders/product_details_controller.dart';
 import 'package:crafty_bay/presentation/state_holders/verify_otp_controller.dart';
 import 'package:crafty_bay/presentation/ui/screens/auth/verify_email_screen.dart';
+import 'package:crafty_bay/presentation/ui/screens/product_reviews_screen.dart';
 import 'package:crafty_bay/presentation/ui/utility/app_color.dart';
 import 'package:crafty_bay/presentation/ui/widgets/Product_details/color_selector.dart';
 import 'package:crafty_bay/presentation/ui/widgets/Product_details/product_image_carousel.dart';
@@ -202,13 +203,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         SizedBox(
           width: 8,
         ),
-        Text(
-          "Reviews",
-          style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppColors.primaryColor),
-        ),
+        TextButton(onPressed: (){
+          Get.to(const ProductReviewScreen());
+        }, child: Text("Reviews",style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: AppColors.primaryColor),)),
         SizedBox(
           width: 8,
         ),

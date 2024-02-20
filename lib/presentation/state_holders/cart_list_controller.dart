@@ -36,7 +36,6 @@ class CartListController extends GetxController{
     _inProgress = false;
     update();
     return isSuccess;
-
   }
 
   void updateQuantity(int id , int quantity){
